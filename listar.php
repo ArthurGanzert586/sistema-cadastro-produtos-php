@@ -7,18 +7,22 @@ if (!isset($_SESSION['usuario_id'])) {
 
 require 'db.php';
 
-// Lógica de filtro
+// Pega o ID do usuário da sessão para o filtro (FUNCIONALIDADE CORRETA)
+$id_usuario_logado = $_SESSION['usuario_id'];
 $filtro_nome = isset($_GET['filtro_nome']) ? $_GET['filtro_nome'] : '';
-$sql = "SELECT * FROM produtos";
+
+// Prepara a query SQL que busca APENAS os produtos do usuário logado (FUNCIONALIDADE CORRETA)
+$sql = "SELECT * FROM produtos WHERE id_usuario = ?";
+$params = [$id_usuario_logado];
+
+// Adiciona o filtro por nome se ele for usado (FUNCIONALIDADE CORRETA)
 if (!empty($filtro_nome)) {
-    $sql .= " WHERE nome LIKE ?";
+    $sql .= " AND nome LIKE ?";
+    $params[] = '%' . $filtro_nome . '%';
 }
+
 $stmt = $pdo->prepare($sql);
-if (!empty($filtro_nome)) {
-    $stmt->execute(['%' . $filtro_nome . '%']);
-} else {
-    $stmt->execute();
-}
+$stmt->execute($params);
 $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
@@ -26,7 +30,14 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <head>
     <meta charset="UTF-8">
     <title>Lista de Produtos</title>
-    <link rel="stylesheet" href="estilo.css">
+    <link rel="stylesheet" href="estilo.css"> 
+    <style>
+        body {
+            background: #0c0c1e;
+            display: block;
+            height: auto;
+        }
+    </style>
 </head>
 <body>
     <?php include 'menu.php'; ?>
