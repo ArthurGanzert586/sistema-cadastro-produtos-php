@@ -11,11 +11,21 @@ if (!isset($_SESSION['usuario_id'])) {
     <meta charset="UTF-8">
     <title>Dashboard - Cadastro de Produtos</title>
     <link rel="stylesheet" href="estilo.css">
+    
+    <style>
+        body {
+            background: #0c0c1e;
+            display: block;
+            height: auto;
+        }
+    </style>
 </head>
 <body>
     <?php include 'menu.php'; ?>
+
     <div class="container">
         <h2>Cadastrar Novo Produto</h2>
+        
         <form action="adicionar.php" method="post" enctype="multipart/form-data">
             <label for="nome">Nome do Produto:</label>
             <input type="text" id="nome" name="nome" required>
